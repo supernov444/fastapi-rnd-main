@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Users List{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-list me-2"></i>Users List</h2>
+    <a href="/create" class="btn btn-primary">
+        <i class="fas fa-plus me-1"></i> Create New User
+    </a>
+</div>
+
+{% if users %}
+<div class="alert alert-info">
+    {{ users|length }} user(s) found
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Full Name</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td><strong>{{ user.username }}</strong></td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.full_name if user.full_name else '-' }}</td>
+                <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <a href="/edit/{{ user.id }}" class="btn btn-outline-primary">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <button onclick="deleteUser('{{ user.id }}', '{{ user.username }}')" 
+                                class="btn btn-outline-danger">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-warning">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    No users found. <a href="/create" class="alert-link">Create the first user</a>.
+</div>
+{% endif %}
+
+<script>
+function deleteUser(userId, username) {
+    if (confirm('Are you sure you want to delete user "' + username + '"?')) {
+        fetch('/api/users/' + userId, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('User deleted successfully!');
+                window.location.reload();
+            } else {
+                alert('Failed to delete user');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting user');
+        });
+    }
+}
+</script>
+{% endblock %}

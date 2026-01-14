@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h4 class="mb-0"><i class="fas fa-edit me-2"></i>Edit User</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" action="/edit/{{ user.id }}">
+                    <div class="mb-3">
+                        <label class="form-label">Username *</label>
+                        <input type="text" name="username" value="{{ user.username }}" 
+                               class="form-control" required minlength="3" maxlength="50">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Email *</label>
+                        <input type="email" name="email" value="{{ user.email }}" 
+                               class="form-control" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="full_name" value="{{ user.full_name if user.full_name else '' }}" 
+                               class="form-control" maxlength="100">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Password (leave empty to keep current)</label>
+                        <input type="password" name="password" class="form-control" minlength="6">
+                        <div class="form-text">Leave empty to keep current password</div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        User ID: {{ user.id }} | Created: {{ user.created_at.strftime('%Y-%m-%d') }}
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="/users" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Users
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> Update User
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
